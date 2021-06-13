@@ -1,18 +1,11 @@
 BUILDDIR=build
 FILENAME=essay
 
-pdf-print:
-	mkdir $(BUILDDIR) -p
-	pandoc $(FILENAME).md \
-	--citeproc \
-	--from=markdown+tex_math_single_backslash+tex_math_dollars+raw_tex \
-	--to=latex \
-	--output=$(BUILDDIR)/$(FILENAME)-print.pdf \
-	--pdf-engine=xelatex \
+pdf: pdf-print pdf-ereader pdf-test-engine
 
 pdf-ereader:
 	mkdir $(BUILDDIR) -p
-	pandoc $(FILENAME).md \
+	pandoc $(FILENAME) \
 	--citeproc \
 	--from=markdown+tex_math_single_backslash+tex_math_dollars+raw_tex \
 	--to=latex \
@@ -20,11 +13,25 @@ pdf-ereader:
 	--pdf-engine=xelatex \
 	--include-in-header="layout/ereader.tex"
 
-pdf: pdf-print pdf-ereader
+pdf-print:
+	mkdir $(BUILDDIR) -p
+	pandoc $(FILENAME) \
+	--citeproc \
+	--from=markdown+tex_math_single_backslash+tex_math_dollars+raw_tex \
+	--to=latex \
+	--output=$(BUILDDIR)/$(FILENAME)-print.pdf \
+	--pdf-engine=xelatex \
+
+pdf-test-engine:
+	mkdir $(BUILDDIR) -p
+	pandoc $(FILENAME) \
+	--citeproc \
+	--from=markdown+tex_math_single_backslash+tex_math_dollars+raw_tex \
+	--output=$(BUILDDIR)/$(FILENAME)-test-engine.pdf \
 
 html:
 	mkdir $(BUILDDIR) -p
-	pandoc $(FILENAME).md \
+	pandoc $(FILENAME) \
 	--citeproc \
 	--from=markdown+tex_math_single_backslash+tex_math_dollars \
 	--to=html5 \

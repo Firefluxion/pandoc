@@ -8,7 +8,7 @@ link-citations: true
 urlcolor: "blue"
 ---
 
-# This is a Test
+# This is a Test!!!!!
 
 # Image
 ![Description \label{fig:1}](http://via.placeholder.com/800x400)
@@ -32,6 +32,30 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 ```python
 def foo():
     return "bar"
+```
+
+```bash
+sudo apt install sl
+```
+
+```bash
+$ sudo apt install sl
+```
+
+```shell
+sudo apt install sl
+```
+
+```mermaid
+stateDiagram
+    [*] --> First
+    state First {
+        [*] --> second
+        second --> [*]
+    }
+```
+```haskell
+qsort [] = []
 ```
 
 Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.

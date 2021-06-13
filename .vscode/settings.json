@@ -1,0 +1,16 @@
+{
+    "markdown-preview-enhanced.usePandocParser": true,
+    "workbench.editorAssociations": {
+        "*.md": "default"
+    },
+    "saveAndRun": {
+        "commands": [
+          {
+            "match": "\\.md$",
+            "cmd": "cd ${fileDirname} && make FILENAME=${fileBasename}",
+            "useShortcut": false,
+            "silent": false
+          }
+        ]
+      }
+}
