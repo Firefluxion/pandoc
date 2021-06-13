@@ -1,7 +1,7 @@
 BUILDDIR=build
 FILENAME=essay
 
-pdf: pdf-print pdf-ereader pdf-test-engine
+pdf: pdf-print pdf-test-engine pdf-ereader
 
 pdf-ereader:
 	mkdir $(BUILDDIR) -p
@@ -27,7 +27,12 @@ pdf-test-engine:
 	pandoc $(FILENAME) \
 	--citeproc \
 	--from=markdown+tex_math_single_backslash+tex_math_dollars+raw_tex \
+	--to=latex \
 	--output=$(BUILDDIR)/$(FILENAME)-test-engine.pdf \
+	--pdf-engine=xelatex \
+	--toc \
+	-N \
+	--toc-depth=2 \
 
 html:
 	mkdir $(BUILDDIR) -p
