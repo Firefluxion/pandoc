@@ -125,9 +125,13 @@ Server runterfahren
 
 Netzwerk Adapter in Virtual Box einstellen
 
+In VirtualBox bei dem server auf Ändern Klicken danach auf den Netzwerk Tab gehen.
+
 1.  Adapter 1 auf NAT einstellen, dieser ist dafür zuständig, dass der Server Internet hat.
 
 2. Adapter 2 auf Host-only Adapter stellen. Dieser ist später für die statische Ip zuständig.
+
+![Adaptereinstellungen \label{fig:AdapterEinstellungen}](screenshotadaptereinstellungen.png)
 
 Server Starten
 
@@ -151,9 +155,11 @@ network:
   version: 2
 ```
 
-Den Netplan mit sudo netplan apply anwenden
+Den Netplan mit **`sudo netplan apply`** anwenden
 
 Mit **`ip a`** prüfen, ob die statische Ip übernommen wurde.
+
+![ip a output \label{fig:IpAOutput}](screenshotipa.png)
 
 # Nextcloud als Filehosting-Lösung in der Private Cloud
 
@@ -178,6 +184,12 @@ systemctl restart apache2
 
 Mit einem Browser zu {server ip}/nextcloud verbinden. Ein admin account anlegen und bei der Datenbank sqlite auswählen.
 
+![Nextcloud startseite \label{fig:NextcloudStartPage}](screennextcloudindex.png)
+
+Anschließend müssen noch die in Nextcloud angezeigten Fehler behoben werden.
+
+![Nextcloud Fehler \label{fig:NextcloudErrorList}](screennextclouderror.png)
+
 .htacces aktivieren **`nano /etc/apache2/sites-available/000-default.conf`** und folgenden Text hinzufügen und speichern (strg + s)
 
 ```bash
@@ -192,11 +204,13 @@ php script memory limit erhöhen
 sudo nano /etc/php/7.4/apache2/php.ini
 ```
 
-Variable memory_limit auf 512 setzen
+Variable memory_limit in der Datei suchen udn auf 512 setzen
 
 ```bash
 sudo service apache2 restart
 ```
+
+Danach sollten alle Fehler behoben sein. Und Nextcloud kann genutzt werden.
 
 # Firewall-Regeln mit nftables
 
@@ -250,7 +264,7 @@ table inet filter {
 }
 ```
 
-Config laden
+Config mit folgenden Befehl laden
 
 ```bash
 sudo systemctl restart nftables && systemctl status nftables && nft list ruleset
