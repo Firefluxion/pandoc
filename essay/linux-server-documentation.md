@@ -117,6 +117,146 @@ Wenn alles geklappt hat sollte es ungefähr so aussehen \ref{fig:SshSystemctlSta
 
 ![Ausgabe von 'sudo systemctl status ssh' \label{fig:SshSystemctlStatus}](Screenshot%20SSH%20Status%202021-06-13%20183238.png)
 
+# Netzwerkkonfiguration mit einer statischen IP-Adresse im lokalen Subnetz
+
+[@staticiponline]
+
+Server runterfahren
+
+Netzwerk Adapter in Virtual Box einstellen
+
+1.  Adapter 1 auf NAT einstellen, dieser ist dafür zuständig, dass der Server Internet hat.
+
+2. Adapter 2 auf Host-only Adapter stellen. Dieser ist später für die statische Ip zuständig.
+
+Server Starten
+
+Mit **`ip a`** testen, ob beide  Adapter erfolgreich übernommen wurden.
+
+In das Verzeichnis **`cd /etc/netplan`** wechseln.
+
+Die .yaml Datei in diesem Ordner editieren **`nano 00-installer-config.yaml`**
+
+Den neuen Host-only Adapter in der Datei hinzufügen, diesem eine Ip Adresse zuweisen und speichern. (strg + s)
+
+```bash
+network:
+  renderer: networkd
+  ethernets:
+    enp0s3:
+      dhcp4: yes
+    enp0s8:
+      addresses: [192.168.56.110/24]
+      dhcp4: false
+  version: 2
+```
+
+Den Netplan mit sudo netplan apply anwenden
+
+Mit **`ip a`** prüfen, ob die statische Ip übernommen wurde.
+
+# Nextcloud als Filehosting-Lösung in der Private Cloud
+
+[@nextcloudonline]
+
+In das root Verzeichnes der webservers wechseln **`cd /var/www/html`**
+
+Die neuste Nextcloud Version herunterladen  
+`wget https://download.nextcloud.com/server/releases/latest.tar.bz2`
+
+Die Datei entpacken **`tar xfvj latest.tar.bz2`** und mit **`rm latest.tar.bz2`** löschen
+
+```bash
+a2enmod rewrite
+```
+
+```bash
+systemctl restart apache2
+```
+
+`sudo apt install php7.4 php7.4-cli php7.4-common php7.4-curl php7.4-gd php7.4-intl php7.4-json php7.4-mbstring php7.4-mysql php7.4-opcache php7.4-readline php7.4-xml php7.4-xsl php7.4-zip php7.4-bz2 php7.4-sqlite libapache2-mod-php7.4 -y`
+
+Mit einem Browser zu {server ip}/nextcloud verbinden. Ein admin account anlegen und bei der Datenbank sqlite auswählen.
+
+.htacces aktivieren **`nano /etc/apache2/sites-available/000-default.conf`** und folgenden Text hinzufügen und speichern (strg + s)
+
+```bash
+<Directory /var/www/html>
+    AllowOverride All
+</Directory>
+```
+
+php script memory limit erhöhen
+
+```bash
+sudo nano /etc/php/7.4/apache2/php.ini
+```
+
+Variable memory_limit auf 512 setzen
+
+```bash
+sudo service apache2 restart
+```
+
+# Firewall-Regeln mit nftables
+
+[@firewallonline]
+
+```bash
+sudo apt install nftables -y
+```
+
+```bash
+sudo nano /etc/nftables.conf
+```
+
+Den Inhalt mit folgendem Text ersetzen und speichern (strg + s)
+
+```bash
+#!/usr/sbin/nft -f
+# vim: ft=pf
+flush ruleset
+
+define tcp_services = { ssh, 80, 443 }
+
+table inet filter {
+    chain input {
+        type filter hook input priority 0;
+        policy drop;
+
+        iif lo accept;
+
+        ct state established, related accept;
+        ct state invalid drop;
+
+        # accept incomming connections on these ports
+        tcp dport $tcp_services accept;
+
+        ip6 nexthdr icmpv6 icmpv6 type {
+            nd-neighbor-solicit, nd-router-advert, nd-neighbor-advert
+        } accept
+    }
+
+    chain forward {
+        type filter hook forward priority 0;
+
+        policy drop;
+    }
+
+    chain output {
+        type filter hook output priority 0;
+        policy accept;
+    }
+}
+```
+
+Config laden
+
+```bash
+sudo systemctl restart nftables && systemctl status nftables && nft list ruleset
+```
+
+Jetzt kann man den Server nur noch auf dem SSH Port (22) und Webserver Port (80,443) erreichen.
 
 # Quellenverzeichnis
 [1](https://www.digitalocean.com/community/tutorials/how-to-install-the-apache-web-server-on-ubuntu-20-04-de)
