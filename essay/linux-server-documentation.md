@@ -1,6 +1,7 @@
 ---
 title: "Einrichtung eines Linux Ubuntu Servers"
 author: "Erik Meyer, Robin Gerwe"
+date: "2021-06-13"
 bibliography: "linux-server-documentation.bib"
 csl: "https://raw.githubusercontent.com/citation-style-language/styles/master/harvard-anglia-ruskin-university.csl"
 link-citations: true
