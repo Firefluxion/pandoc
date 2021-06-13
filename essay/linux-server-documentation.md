@@ -265,7 +265,7 @@ systemctl restart apache2
 
 Mit einem Browser zu {server ip}/nextcloud verbinden. Ein admin account anlegen und bei der Datenbank sqlite auswählen.
 
-![Nextcloud startseite \label{fig:NextcloudStartPage}](screennextcloudindex.png)
+![Nextcloud Startseite \label{fig:NextcloudStartPage}](screennextcloudindex.png)
 
 Anschließend müssen noch die in Nextcloud angezeigten Fehler behoben werden.
 
