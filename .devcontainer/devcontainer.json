@@ -18,7 +18,7 @@
 		"wk-j.save-and-run",
 		"james-yu.latex-workshop",
 		"tomoki1207.pdf",
-		"cyangle.vscode-save-and-run-built-in-commands"
+		"cyangle.vscode-save-and-run-built-in-commands",
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
